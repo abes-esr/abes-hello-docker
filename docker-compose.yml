@@ -1,0 +1,74 @@
+#
+# Ci-dessous la config qui permet de lancer abes-hello (3 conteneurs)
+#
+# Remarque: avant de lancer docker-compose up, il faut régler le fichier .env
+# en partant du fichier .env-dist qui donne les variables d'environnements
+# à personnaliser et des exemples de valeurs.
+#
+
+version: "3"
+
+services:
+
+  abes-hello-front:
+    image: abesesr/abes-hello:${ABESHELLO_FRONT_VERSION:-develop-front}
+    container_name: abes-hello-front
+    restart: unless-stopped
+    environment:
+      - ABESHELLO_VUE_APP_ROOT_API=${ABESHELLO_VUE_APP_ROOT_API:-http://127.0.0.1:7081/}
+    ports:
+      - ${ABESHELLO_FRONT_HTTP_PORT:-7080}:80
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
+    depends_on:
+      - abes-hello-web
+
+
+  abes-hello-web:
+    image: abesesr/abes-hello:${ABESHELLO_WEB_VERSION:-develop-web}
+    container_name: abes-hello-web
+    restart: unless-stopped
+    environment:
+      # autre façon de passer des paramètres spring:
+      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV:-dev}
+      - SPRING_CONFIG_LOCATION=/config/
+    volumes:
+      - ./volumes/abes-hello-web/application-dev.properties:/config/application-dev.properties:ro
+      - ./volumes/abes-hello-web/application-test.properties:/config/application-test.properties:ro
+      - ./volumes/abes-hello-web/application-prod.properties:/config/application-prod.properties:ro
+    ports:
+      - ${ABESHELLO_BACK_HTTP_PORT:-7081}:8080
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+
+
+
+  abes-hello-batch:
+    image: abesesr/abes-hello:${ABESHELLO_BATCH_VERSION:-develop-batch}
+    container_name: abes-hello-batch
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV:-dev}
+      - SPRING_CONFIG_LOCATION=/config/
+      - ABESHELLO_BATCH_AT_STARTUP=${ABESHELLO_BATCH_AT_STARTUP:-"1"}
+      - ABESHELLO_BATCH_CRON=${ABESHELLO_BATCH_CRON:-"0 * * * *"}
+    volumes:
+      - ./volumes/abes-hello-batch/application-dev.properties:/config/application-dev.properties:ro
+      - ./volumes/abes-hello-batch/application-test.properties:/config/application-test.properties:ro
+      - ./volumes/abes-hello-batch/application-prod.properties:/config/application-prod.properties:ro
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+
