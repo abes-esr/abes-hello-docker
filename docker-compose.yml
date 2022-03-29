@@ -33,14 +33,19 @@ services:
     container_name: abes-hello-web
     restart: unless-stopped
     environment:
-      # autre façon de passer des paramètres spring:
-      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      # Pour basculer sur bon application-xxx.properties préalablement embarqué
+      # dans le code ici:
+      # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
       - SPRING_PROFILES_ACTIVE=${APPLIS_ENV:-dev}
-      - SPRING_CONFIG_LOCATION=/config/
-    volumes:
-      - ./volumes/abes-hello-web/application-dev.properties:/config/application-dev.properties:ro
-      - ./volumes/abes-hello-web/application-test.properties:/config/application-test.properties:ro
-      - ./volumes/abes-hello-web/application-prod.properties:/config/application-prod.properties:ro
+      # Pour surcharger les paramètres spring du application-xxx.properties
+      # ci-dessous via le système de .env de docker
+      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      # pour la liste de tous les champs qu'on peut surcharger,
+      # voir le contenu des application-xxx.properties embarqués dans le code sources
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      - JWT_TOKEN_SECRET=${JWT_TOKEN_SECRET}
     ports:
       - ${ABESHELLO_BACK_HTTP_PORT:-7081}:8080
     labels:
@@ -57,14 +62,20 @@ services:
     container_name: abes-hello-batch
     restart: unless-stopped
     environment:
-      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV:-dev}
-      - SPRING_CONFIG_LOCATION=/config/
       - ABESHELLO_BATCH_AT_STARTUP=${ABESHELLO_BATCH_AT_STARTUP:-"1"}
       - ABESHELLO_BATCH_CRON=${ABESHELLO_BATCH_CRON:-"0 * * * *"}
-    volumes:
-      - ./volumes/abes-hello-batch/application-dev.properties:/config/application-dev.properties:ro
-      - ./volumes/abes-hello-batch/application-test.properties:/config/application-test.properties:ro
-      - ./volumes/abes-hello-batch/application-prod.properties:/config/application-prod.properties:ro
+      # Pour basculer sur bon application-xxx.properties préalablement embarqué
+      # dans le code ici:
+      # https://github.com/abes-esr/abes-hello-back/tree/develop/batch/src/main/resources/
+      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV:-dev}
+      # Pour surcharger les paramètres spring du application-xxx.properties
+      # ci-dessous via le système de .env de docker
+      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      # pour la liste de tous les champs qu'on peut surcharger,
+      # voir le contenu des application-xxx.properties embarqués dans le code sources
+      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
