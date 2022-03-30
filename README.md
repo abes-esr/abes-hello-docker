@@ -1,8 +1,8 @@
 # abes-hello-docker
 
-Configuration pour le déploiement docker de abes-hello (travail en cours, à ajuster avec le cadre Ansible)
+Configuration pour le déploiement docker de l'application abes-hello ("Hello World" illustrant la [politique de dev de l'Abes](https://github.com/abes-esr/abes-politique-developpement)).
 
-A noter que les images docker de abes-hello sont générées à partir des codes open sources disponibles ici :
+A noter que les images docker de l'application abes-hello sont générées à partir des codes open sources de ces deux dépôts :
 - https://github.com/abes-esr/abes-hello-back/ via la chaine d'intégration continue suivante [![ci](https://github.com/abes-esr/abes-hello-back/actions/workflows/build-test-pubtodockerhub.yml/badge.svg)](https://github.com/abes-esr/abes-hello-back/actions/workflows/build-test-pubtodockerhub.yml) qui pousse les images ici [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/abes-hello.svg)](https://hub.docker.com/r/abesesr/abes-hello/)
 - https://github.com/abes-esr/abes-hello-front/  via la chaine d'intégration continue suivante [![ci](https://github.com/abes-esr/abes-hello-front/actions/workflows/build-test-pubtodockerhub.yml/badge.svg)](https://github.com/abes-esr/abes-hello-front/actions/workflows/build-test-pubtodockerhub.yml) qui pousse les images ici [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/abes-hello.svg)](https://hub.docker.com/r/abesesr/abes-hello/)
 
@@ -57,9 +57,9 @@ A noter que ces logs sont envoyées automatiquement au puits de log de l'Abes à
 
 ## Mise à jour de l'application
 
-Pour mettre à jour l'application cela suppose qu'une nouvelle version du code à été publiée. Le fait de publier cette nouvelle version a généré l'image docker correspondante dans dockerhub. On doit alors l'indiquer en modifiant le numéro de version dans le [``docker-compose.yml``](https://git.abes.fr/depots/abes-hello-docker/-/blob/main/docker-compose.yml) de ce présent dépôt. Dans de rares cas (release d'une version majeure) il est éventuellement nécessaire d'ajouter les variables d'environnement dans ``/opt/pod/abes-hello-docker/.env`` en prenant exemple sur [``/opt/pod/abes-hello-docker/.env-dist``](https://git.abes.fr/depots/abes-hello-docker/-/blob/main/.env-dist).
+Pour mettre à jour l'application cela suppose qu'une nouvelle version du code ait été publiée. Le fait de publier une nouvelle version va généré l'image docker correspondante dans dockerhub. On doit alors l'indiquer en modifiant le numéro de version dans le [``docker-compose.yml``](https://github.com/abes-esr/abes-hello-docker/blob/develop/docker-compose.yml) de ce présent dépôt. Dans de rares cas (release d'une version majeure) il est éventuellement nécessaire d'ajouter les variables d'environnement dans ``/opt/pod/abes-hello-docker/.env`` en prenant exemple sur [``/opt/pod/abes-hello-docker/.env-dist``](https://github.com/abes-esr/abes-hello-docker/blob/develop/.env-dist).
 
-Ensuite il suffit de lancer la commande suivante qui aura pour effet de recréer tous les conteneurs dont la nouvelle version a été indiquée dans le [``docker-compose.yml``](https://git.abes.fr/depots/abes-hello-docker/-/blob/main/docker-compose.yml) :
+Ensuite il suffit de lancer la commande suivante qui aura pour effet de recréer tous les conteneurs dont la nouvelle version a été indiquée dans le [``docker-compose.yml``](https://github.com/abes-esr/abes-hello-docker/blob/develop/docker-compose.yml) :
 ```bash
 cd /opt/pod/abes-hello-docker/
 docker-compose up -d
