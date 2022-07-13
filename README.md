@@ -29,9 +29,14 @@ docker-compose up -d
 ```
 
 L'application va alors écouter sur les ports 7080 (pour le front) et 7081 (pour le back). Remarques: le ports peuvent être personnalisés dans le ``.env``.
+
+Exemple d'URL une fois déployé en local :
+- Le front : http://127.0.0.1:7080/
+- Le back : http://127.0.0.1:7081/v1/api/
+
 Exemple d'URL une fois déployé sur le serveur diplotaxis-test.v202.abes.fr :
 - Le front : http://diplotaxis-test.v202.abes.fr:7080/
-- Le back : http://diplotaxis-test.v202.abes.fr:7081/
+- Le back : http://diplotaxis-test.v202.abes.fr:7081/v1/api/
 
 Pour arrêter l'application :
 ```bash
