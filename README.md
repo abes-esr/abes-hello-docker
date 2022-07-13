@@ -4,7 +4,12 @@
 
 Configuration pour le déploiement docker de l'application abes-hello ("Hello World" illustrant la [politique de dev de l'Abes](https://github.com/abes-esr/abes-politique-developpement)).
 
-A noter que les images docker de l'application abes-hello sont générées à partir des codes open sources de ces deux dépôts :
+Les URLs de l'application abes-hello sont les suivantes :
+- en dev :  https://hello-dev.abes.fr/
+- en test : https://hello-test.abes.fr/
+- en prod : https://hello.abes.fr/
+
+A noter que les codes sources de l'application abes-hello sont hébergés sur ces deux dépôts :
 - https://github.com/abes-esr/abes-hello-back/
 - https://github.com/abes-esr/abes-hello-front/
 
