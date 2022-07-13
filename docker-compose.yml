@@ -11,13 +11,13 @@ version: "3"
 services:
 
   abes-hello-front:
-    image: abesesr/abes-hello:${ABESHELLO_FRONT_VERSION:-develop-front}
+    image: abesesr/abes-hello:${ABESHELLO_FRONT_VERSION}
     container_name: abes-hello-front
     restart: unless-stopped
     environment:
-      - ABESHELLO_VUE_APP_ROOT_API=${ABESHELLO_VUE_APP_ROOT_API:-http://127.0.0.1:7081/}
+      - ABESHELLO_VUE_APP_ROOT_API=${ABESHELLO_VUE_APP_ROOT_API}
     ports:
-      - ${ABESHELLO_FRONT_HTTP_PORT:-7080}:80
+      - ${ABESHELLO_FRONT_HTTP_PORT}:80
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -29,14 +29,14 @@ services:
 
 
   abes-hello-web:
-    image: abesesr/abes-hello:${ABESHELLO_WEB_VERSION:-develop-web}
+    image: abesesr/abes-hello:${ABESHELLO_WEB_VERSION}
     container_name: abes-hello-web
     restart: unless-stopped
     environment:
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
-      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV:-dev}
+      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV}
       # Pour surcharger les paramètres spring du application-xxx.properties
       # ci-dessous via le système de .env de docker
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
@@ -47,7 +47,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - JWT_TOKEN_SECRET=${JWT_TOKEN_SECRET}
     ports:
-      - ${ABESHELLO_BACK_HTTP_PORT:-7081}:8080
+      - ${ABESHELLO_BACK_HTTP_PORT}:8080
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -58,16 +58,16 @@ services:
 
 
   abes-hello-batch:
-    image: abesesr/abes-hello:${ABESHELLO_BATCH_VERSION:-develop-batch}
+    image: abesesr/abes-hello:${ABESHELLO_BATCH_VERSION}
     container_name: abes-hello-batch
     restart: unless-stopped
     environment:
-      - ABESHELLO_BATCH_AT_STARTUP=${ABESHELLO_BATCH_AT_STARTUP:-"1"}
-      - ABESHELLO_BATCH_CRON=${ABESHELLO_BATCH_CRON:-"0 * * * *"}
+      - ABESHELLO_BATCH_AT_STARTUP=${ABESHELLO_BATCH_AT_STARTUP}
+      - ABESHELLO_BATCH_CRON=${ABESHELLO_BATCH_CRON}
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/batch/src/main/resources/
-      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV:-dev}
+      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV}
       # Pour surcharger les paramètres spring du application-xxx.properties
       # ci-dessous via le système de .env de docker
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
