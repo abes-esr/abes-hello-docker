@@ -1,10 +1,12 @@
 # abes-hello-docker
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/abes-hello.svg)](https://hub.docker.com/r/abesesr/abes-hello/)
+
 Configuration pour le déploiement docker de l'application abes-hello ("Hello World" illustrant la [politique de dev de l'Abes](https://github.com/abes-esr/abes-politique-developpement)).
 
 A noter que les images docker de l'application abes-hello sont générées à partir des codes open sources de ces deux dépôts :
-- https://github.com/abes-esr/abes-hello-back/ via la chaine d'intégration continue suivante [![ci](https://github.com/abes-esr/abes-hello-back/actions/workflows/build-test-pubtodockerhub.yml/badge.svg)](https://github.com/abes-esr/abes-hello-back/actions/workflows/build-test-pubtodockerhub.yml) qui pousse les images ici [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/abes-hello.svg)](https://hub.docker.com/r/abesesr/abes-hello/)
-- https://github.com/abes-esr/abes-hello-front/  via la chaine d'intégration continue suivante [![ci](https://github.com/abes-esr/abes-hello-front/actions/workflows/build-test-pubtodockerhub.yml/badge.svg)](https://github.com/abes-esr/abes-hello-front/actions/workflows/build-test-pubtodockerhub.yml) qui pousse les images ici [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/abes-hello.svg)](https://hub.docker.com/r/abesesr/abes-hello/)
+- https://github.com/abes-esr/abes-hello-back/
+- https://github.com/abes-esr/abes-hello-front/
 
 ## Installation
 
