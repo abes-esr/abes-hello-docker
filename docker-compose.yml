@@ -15,7 +15,7 @@ services:
     container_name: abes-hello-front
     restart: unless-stopped
     environment:
-      - ABESHELLO_VUE_APP_ROOT_API=${ABESHELLO_VUE_APP_ROOT_API}
+      ABESHELLO_VUE_APP_ROOT_API: ${ABESHELLO_VUE_APP_ROOT_API}
     ports:
       - ${ABESHELLO_FRONT_HTTP_PORT}:80
     labels:
@@ -36,16 +36,16 @@ services:
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
-      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       # Pour surcharger les paramètres spring du application-xxx.properties
       # ci-dessous via le système de .env de docker
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
-      - JWT_TOKEN_SECRET=${JWT_TOKEN_SECRET}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      JWT_TOKEN_SECRET: ${JWT_TOKEN_SECRET}
     ports:
       - ${ABESHELLO_BACK_HTTP_PORT}:8080
     labels:
@@ -62,20 +62,20 @@ services:
     container_name: abes-hello-batch
     restart: unless-stopped
     environment:
-      - ABESHELLO_BATCH_AT_STARTUP=${ABESHELLO_BATCH_AT_STARTUP}
-      - ABESHELLO_BATCH_CRON=${ABESHELLO_BATCH_CRON}
+      ABESHELLO_BATCH_AT_STARTUP: ${ABESHELLO_BATCH_AT_STARTUP}
+      ABESHELLO_BATCH_CRON: ${ABESHELLO_BATCH_CRON}
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/batch/src/main/resources/
-      - SPRING_PROFILES_ACTIVE=${APPLIS_ENV}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
       # Pour surcharger les paramètres spring du application-xxx.properties
       # ci-dessous via le système de .env de docker
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
-      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
-      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
