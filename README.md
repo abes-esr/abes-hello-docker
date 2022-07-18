@@ -27,6 +27,8 @@ cp .env-dist .env
 #   - URL du back pour que le front puisse l'appeler
 ```
 
+La personnalisation du ``.env`` se fait à partir d'une copie de ``.env-dist`` qui contient des [commentaires qui expliquent toutes les variables disponnibles que l'on peut personnaliser](./.env-dist).
+
 ## Démarrage et arret
 
 Pour démarrer l'application :
