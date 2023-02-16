@@ -14,6 +14,7 @@ services:
     image: abesesr/abes-hello:${ABESHELLO_FRONT_VERSION}
     container_name: abes-hello-front
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     environment:
       ABESHELLO_VUE_APP_ROOT_API: ${ABESHELLO_VUE_APP_ROOT_API}
     ports:
@@ -32,6 +33,7 @@ services:
     image: abesesr/abes-hello:${ABESHELLO_WEB_VERSION}
     container_name: abes-hello-web
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     environment:
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
@@ -61,6 +63,7 @@ services:
     image: abesesr/abes-hello:${ABESHELLO_BATCH_VERSION}
     container_name: abes-hello-batch
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     environment:
       ABESHELLO_BATCH_AT_STARTUP: ${ABESHELLO_BATCH_AT_STARTUP}
       ABESHELLO_BATCH_CRON: ${ABESHELLO_BATCH_CRON}
