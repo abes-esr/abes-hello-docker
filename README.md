@@ -34,7 +34,7 @@ La personnalisation du ``.env`` se fait à partir d'une copie de ``.env-dist`` q
 Pour démarrer l'application :
 ```bash
 cd /opt/pod/abes-hello-docker/
-docker-compose up -d
+docker compose up -d
 ```
 
 L'application va alors écouter sur les ports 7080 (pour le front) et 7081 (pour le back). Remarques: le ports peuvent être personnalisés dans le ``.env``.
@@ -50,7 +50,7 @@ Exemple d'URL une fois déployé sur le serveur diplotaxis-test.v202.abes.fr :
 Pour arrêter l'application :
 ```bash
 cd /opt/pod/abes-hello-docker/
-docker-compose stop
+docker compose stop
 ```
 
 ## Supervision
@@ -58,13 +58,13 @@ docker-compose stop
 Pour vérifier que l'application est démarrée, on peut consulter l'état des conteneurs :
 ```bash
 cd /opt/pod/abes-hello-docker/
-docker-compose ps
+docker compose ps
 ```
 
 Pour vérifier que l'application est bien lancée, on peut consulter les logs :
 ```bash
 cd /opt/pod/abes-hello-docker/
-docker-compose logs --tail=50 -f
+docker compose logs --tail=50 -f
 ```
 A noter que ces logs sont envoyées automatiquement au puits de log de l'Abes à l'aide du client filebeat installé sur le noeud docker et à la configuration que nous lui indiquons dans les labels (cf docker-compose.yml).
 
@@ -76,7 +76,7 @@ Pour mettre à jour l'application cela suppose qu'une nouvelle version du code a
 Ensuite il suffit de lancer la commande suivante qui aura pour effet de recréer tous les conteneurs dont la nouvelle version a été indiquée dans le [``docker-compose.yml``](https://github.com/abes-esr/abes-hello-docker/blob/develop/docker-compose.yml) :
 ```bash
 cd /opt/pod/abes-hello-docker/
-docker-compose up -d
+docker compose up -d
 ```
 
 
