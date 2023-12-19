@@ -27,6 +27,8 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"   
     depends_on:
       - abes-hello-web
 
@@ -62,6 +64,8 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"   
 
 
 
@@ -95,4 +99,38 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"   
 
+
+  #######################################
+  # abes-hello-watchtower
+  # Conteneur chargé de mettre à jour automatiquement toutes les 60 secondes 
+  # l'image docker des conteneurs abes-hello-*
+  # Plus d'info : https://containrrr.dev/watchtower
+  abes-hello-watchtower:
+    image: containrrr/watchtower:1.7.1
+    container_name: abes-hello-watchtower
+    restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    memswap_limit: ${MEM_LIMIT}
+    cpus: ${CPU_LIMIT}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: 60
+      WATCHTOWER_DEBUG: "false"
+      WATCHTOWER_NO_STARTUP_MESSAGE: "true"
+      WATCHTOWER_WARN_ON_HEAD_FAILURE: "never"
+      WATCHTOWER_RUN_ONCE: ${ABESHELLO_WATCHTOWER_RUN_ONCE}
+      WATCHTOWER_NOTIFICATIONS: "slack"
+      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${ABESHELLO_WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL}
+      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: ${ABESHELLO_WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER}
+      WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: "#notifs-github"
+      WATCHTOWER_SCOPE: "abes-hello-watchtower-scope"
+      # https://github.com/containrrr/watchtower/issues/1599
+      REPO_USER: ${ABESHELLO_WATCHTOWER_DOCKERHUB_USER}
+      REPO_PASS: ${ABESHELLO_WATCHTOWER_DOCKERHUB_PASS}
+    labels:
+      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"
