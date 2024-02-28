@@ -50,9 +50,9 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://abes-hello-db:5432/abes-hello'
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
       JWT_TOKEN_SECRET: ${JWT_TOKEN_SECRET}
       # pour autoriser java à prendre 95% de la ram qu'on lui donne (mem_limit)
       JVM_OPTS: "-XX:MaxRAMPercentage=95"
@@ -89,8 +89,8 @@ services:
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${ABESHELLO_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${ABESHELLO_DB_PASSWORD}
       # pour autoriser java à prendre 95% de la ram qu'on lui donne (mem_limit)
       JVM_OPTS: "-XX:MaxRAMPercentage=95"
     labels:
@@ -116,19 +116,17 @@ services:
     environment:
       # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
       POSTGRES_DB: "abes-hello"
-      POSTGRES_USER: ${ABES_HELLO_DB_USER}
-      POSTGRES_PASSWORD: ${ABES_HELLO_DB_PASSWORD}
+      POSTGRES_USER: ${ABESHELLO_DB_USER}
+      POSTGRES_PASSWORD: ${ABESHELLO_DB_PASSWORD}
     volumes:
       - ./volumes/abes-hello-db/pgdata/:/var/lib/postgresql/data/
-    # todo delete( test en dev)
     ports:
       - 5432:5432
-      #- 11083:5432
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
       - "co.elastic.logs/processors.add_fields.target="
-      - "co.elastic.logs/processors.add_fields.fields.abes_appli=qualimarc"
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
 
 
@@ -144,7 +142,7 @@ services:
     memswap_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
     ports:
-      - ${ABES_HELLO_DB_ADMINER_PORT}:8080
+      - ${ABESHELLO_DB_ADMINER_PORT}:8080
     depends_on:
       - abes-hello-db
     environment:
@@ -168,7 +166,7 @@ services:
     cpus: ${CPU_LIMIT}
     volumes:
       - ./volumes/abes-hello-db/dump/:/backup/
-      - ./volumes/abes-hello-db-dumper/script/:/assets/scripts/post/:w
+      - ./volumes/abes-hello-db-dumper/script/:/assets/scripts/post/
     depends_on:
       - abes-hello-db
     environment:
