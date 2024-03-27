@@ -120,8 +120,6 @@ services:
       POSTGRES_PASSWORD: ${ABESHELLO_DB_PASSWORD}
     volumes:
       - ./volumes/abes-hello-db/pgdata/:/var/lib/postgresql/data/
-    ports:
-      - 5432:5432
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
