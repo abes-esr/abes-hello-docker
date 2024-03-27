@@ -51,8 +51,8 @@ services:
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://abes-hello-db:5432/abes-hello'
-      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_DATASOURCE_USERNAME: ${ABESHELLO_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${ABESHELLO_DB_PASSWORD}
       JWT_TOKEN_SECRET: ${JWT_TOKEN_SECRET}
       # pour autoriser java à prendre 95% de la ram qu'on lui donne (mem_limit)
       JVM_OPTS: "-XX:MaxRAMPercentage=95"
@@ -88,7 +88,7 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://abes-hello-db:5432/abes-hello'
       SPRING_DATASOURCE_USERNAME: ${ABESHELLO_DB_USER}
       SPRING_DATASOURCE_PASSWORD: ${ABESHELLO_DB_PASSWORD}
       # pour autoriser java à prendre 95% de la ram qu'on lui donne (mem_limit)
