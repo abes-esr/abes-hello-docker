@@ -28,7 +28,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"   
+      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"
     depends_on:
       - abes-hello-web
 
@@ -50,9 +50,9 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://abes-hello-db:5432/abes-hello'
+      SPRING_DATASOURCE_USERNAME: ${ABESHELLO_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${ABESHELLO_DB_PASSWORD}
       JWT_TOKEN_SECRET: ${JWT_TOKEN_SECRET}
       # pour autoriser java à prendre 95% de la ram qu'on lui donne (mem_limit)
       JVM_OPTS: "-XX:MaxRAMPercentage=95"
@@ -65,7 +65,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"   
+      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"
 
 
 
@@ -88,9 +88,9 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
-      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://abes-hello-db:5432/abes-hello'
+      SPRING_DATASOURCE_USERNAME: ${ABESHELLO_DB_USER}
+      SPRING_DATASOURCE_PASSWORD: ${ABESHELLO_DB_PASSWORD}
       # pour autoriser java à prendre 95% de la ram qu'on lui donne (mem_limit)
       JVM_OPTS: "-XX:MaxRAMPercentage=95"
     labels:
@@ -100,12 +100,108 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"   
+      - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"
+
+
+  ##############################
+  # abes-hello--db
+  # Base de données postgresql de abes-hello-
+  abes-hello-db:
+    image: abesesr/postgres-fr_fr:15.1.0
+    container_name: abes-hello-db
+    restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    memswap_limit: ${MEM_LIMIT}
+    cpus: ${CPU_LIMIT}
+    environment:
+      # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
+      POSTGRES_DB: "abes-hello"
+      POSTGRES_USER: ${ABESHELLO_DB_USER}
+      POSTGRES_PASSWORD: ${ABESHELLO_DB_PASSWORD}
+    volumes:
+      - ./volumes/abes-hello-db/pgdata/:/var/lib/postgresql/data/
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
+
+
+
+  #################################
+  # abes-hello-db-adminer
+  # Interface d'admin de postgresql
+  abes-hello-db-adminer:
+    image: adminer:4.8.1
+    container_name: abes-hello-db-adminer
+    restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    memswap_limit: ${MEM_LIMIT}
+    cpus: ${CPU_LIMIT}
+    ports:
+      - ${ABESHELLO_DB_ADMINER_PORT}:8080
+    depends_on:
+      - abes-hello-db
+    environment:
+      ADMINER_DEFAULT_SERVER: "abes-hello-db"
+    logging:
+      driver: none # pas de log pour adminer pour ne pas polluer
+
+
+
+  #######################################
+  # abes-hello-db-dumper
+  # Dump de la base de données postgresql
+  # (dump tous les jours pour les sauvegardes)
+  # https://github.com/tiredofit/docker-db-backup
+  abes-hello-db-dumper:
+    image: tiredofit/db-backup:4.0.35
+    container_name: abes-hello-db-dumper
+    restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
+    memswap_limit: ${MEM_LIMIT}
+    cpus: ${CPU_LIMIT}
+    volumes:
+      - ./volumes/abes-hello-db/dump/:/backup/
+      - ./volumes/abes-hello-db-dumper/script/:/assets/scripts/post/
+    depends_on:
+      - abes-hello-db
+    environment:
+      # DB_DUMP_BEGIN: "0130" <= tous les jours à 1h30 du matin GMT
+      # DB_DUMP_FREQ: 1440 <= chaque jour
+      # DB_CLEANUP_TIME: 10080 (1440*7) <= conserve uniquement les 7 derniers jours
+      DB_TYPE: "pgsql"
+      DB_HOST: "abes-hello-db"
+      DB_NAME: "abes-hello"
+      DB_USER: ${ABESHELLO_DB_USER}
+      DB_PASS: ${ABESHELLO_DB_PASSWORD}
+      DEFAULT_BACKUP_BEGIN: "0130"
+      DEFAULT_BACKUP_INTERVAL: 1440
+      DEFAULT_CLEANUP_TIME: 10080
+      DEFAULT_COMPRESSION: "GZ"
+      DEBUG_MODE: "false"
+      CONTAINER_ENABLE_SCHEDULING: "false"
+      CONTAINER_ENABLE_MONITORING: "false"
+      DEFAULT_POST_SCRIPT: /assets/scripts/post/script.sh
+      NOTIFICATION_SLACK_HOOK_URL: ${ABESHELLO_DB_DUMPER_NOTIFICATION_SLACK_HOOK_URL}
+      NOTIFICATION_SLACK_IDENTIFIER: ${ABESHELLO_DB_DUMPER_NOTIFICATION_SLACK_IDENTIFIER}
+    labels:
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=adhoc"
+      # log multiline aussi pour ce conteneur avec des lignes qui ressemblent à ceci:
+      # 2022-08-01.14:55:00 [NOTICE] ** [db-backup] Dumping PostgresSQL database: 'abes-hello' and compressing with 'gzip'
+      - "co.elastic.logs/multiline.type=pattern"
+      - "co.elastic.logs/multiline.pattern='^.*Dumping PostgresSQL database'"
+      - "co.elastic.logs/multiline.negate=true"
+      - "co.elastic.logs/multiline.match=after"
 
 
   #######################################
   # abes-hello-watchtower
-  # Conteneur chargé de mettre à jour automatiquement toutes les 60 secondes 
+  # Conteneur chargé de mettre à jour automatiquement toutes les 60 secondes
   # l'image docker des conteneurs abes-hello-*
   # Plus d'info : https://containrrr.dev/watchtower
   abes-hello-watchtower:
