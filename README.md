@@ -82,6 +82,7 @@ docker compose up -d
 
 ## Sauvegardes et restauration
 
+**A SUPPRIMER ET METTRE EGALEMENT LA VRAIE PROCEDURE DE RESTAURATION**
 Pas besoin de sauvegarder l'application. C'est une application de type hello world qui ne contient aucune données importantes.
 
 Pour lancer manuellement une sauvegarde de la base de donnée, exécuter la commande suivante en se plaçant dans le dossier qui contient le docker-compose.yml :
