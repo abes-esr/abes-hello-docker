@@ -84,6 +84,11 @@ docker compose up -d
 
 Pas besoin de sauvegarder l'application. C'est une application de type hello world qui ne contient aucune données importantes.
 
+Pour lancer manuellement une sauvegarde de la base de donnée, exécuter la commande suivante en se plaçant dans le dossier qui contient le docker-compose.yml :
+```bash
+sudo docker exec -it abes-hello-db-dumper backup-now
+```
+
 ## Architecture
 
 TODO.
