@@ -168,14 +168,14 @@ services:
     depends_on:
       - abes-hello-db
     environment:
-      # DB_DUMP_BEGIN: "0130" <= tous les jours à 1h30 du matin GMT
-      # DB_DUMP_FREQ: 1440 <= chaque jour
-      # DB_CLEANUP_TIME: 10080 (1440*7) <= conserve uniquement les 7 derniers jours
       DB_TYPE: "pgsql"
       DB_HOST: "abes-hello-db"
       DB_NAME: "abes-hello"
       DB_USER: ${ABESHELLO_DB_USER}
       DB_PASS: ${ABESHELLO_DB_PASSWORD}
+      # DEFAULT_BACKUP_BEGIN: "0130" <= tous les jours à 1h30 du matin GMT
+      # DEFAULT_BACKUP_INTERVAL: 1440 <= chaque jour
+      # DEFAULT_CLEANUP_TIME: 10080 (1440*7) <= conserve uniquement les 7 derniers jours
       DEFAULT_BACKUP_BEGIN: "0130"
       DEFAULT_BACKUP_INTERVAL: 1440
       DEFAULT_CLEANUP_TIME: 10080
@@ -186,6 +186,10 @@ services:
       DEFAULT_POST_SCRIPT: /assets/scripts/post/script.sh
       NOTIFICATION_SLACK_HOOK_URL: ${ABESHELLO_DB_DUMPER_NOTIFICATION_SLACK_HOOK_URL}
       NOTIFICATION_SLACK_IDENTIFIER: ${ABESHELLO_DB_DUMPER_NOTIFICATION_SLACK_IDENTIFIER}
+      # GROUP_DBBACKUP : donne le groupe docker aux fichiers de backup
+      GROUP_DBBACKUP: "564406605"
+      DEFAULT_FILESYSTEM_PERMISSION: 440
+      DEFAULT_FILESYSTEM_PATH_PERMISSION: 775
     labels:
       - "co.elastic.logs/enabled=true"
       - "co.elastic.logs/processors.add_fields.target="
