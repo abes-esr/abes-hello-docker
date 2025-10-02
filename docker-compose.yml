@@ -16,7 +16,7 @@ services:
     memswap_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
     environment:
-      NUXT_API_URL: ${ABESHELLO_VUE_APP_ROOT_API}
+      NUXT_PUBLIC_API_URL: ${ABESHELLO_VUE_APP_ROOT_API}
     ports:
       - ${ABESHELLO_FRONT_HTTP_PORT}:80
     labels:
@@ -64,7 +64,8 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=abes-hello-watchtower-scope"
-
+    depends_on:
+      - abes-hello-db
 
 
   abes-hello-batch:
