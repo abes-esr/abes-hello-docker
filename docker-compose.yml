@@ -55,7 +55,7 @@ services:
       # pour autoriser java à prendre 95% de la ram qu'on lui donne (mem_limit)
       JVM_OPTS: "-XX:MaxRAMPercentage=95"
     ports:
-      - ${ABESHELLO_BACK_HTTP_PORT}:8080
+      - ${ABESHELLO_BACK_HTTP_PORT}:8081
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
