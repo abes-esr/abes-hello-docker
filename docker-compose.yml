@@ -210,7 +210,7 @@ services:
   # l'image docker des conteneurs abes-hello-*
   # Plus d'info : https://containrrr.dev/watchtower
   abes-hello-watchtower:
-    image: containrrr/watchtower:1.7.1
+    image: nickfedor/watchtower:1.13.1
     container_name: abes-hello-watchtower
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
