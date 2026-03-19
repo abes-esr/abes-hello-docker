@@ -27,6 +27,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
       # pour que les mises à jour de cette image soient auto-déployées par WUD
       - "wud.watch=true"
+      - "wud.watch.digest=true"
     depends_on:
       - abes-hello-web
 
@@ -64,6 +65,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises à jour de cette image soient auto-déployées par WUD
       - "wud.watch=true"
+      - "wud.watch.digest=true"
     depends_on:
       - abes-hello-db
 
@@ -100,6 +102,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises à jour de cette image soient auto-déployées par WUD
       - "wud.watch=true"
+      - "wud.watch.digest=true"
 
 
   ##############################
