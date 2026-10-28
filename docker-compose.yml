@@ -130,7 +130,7 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=abes-hello"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
-      - # pour que cette image soit surveillée par WUD mais pas auto-déployée
+      # pour que cette image soit surveillée par WUD mais pas auto-déployée
       - "wud.watch=true"
       - "wud.trigger.exclude=docker.upgrade,slack.notif"
 
@@ -154,7 +154,7 @@ services:
     logging:
       driver: none # pas de log pour adminer pour ne pas polluer
     labels:
-      - # pour que cette image soit surveillée par WUD mais pas auto-déployée
+      # pour que cette image soit surveillée par WUD mais pas auto-déployée
       - "wud.watch=true"
       - "wud.trigger.exclude=docker.upgrade,slack.notif"
 
@@ -210,6 +210,6 @@ services:
       - "co.elastic.logs/multiline.pattern='^.*Dumping PostgresSQL database'"
       - "co.elastic.logs/multiline.negate=true"
       - "co.elastic.logs/multiline.match=after"
-      - # pour que cette image soit surveillée par WUD mais pas auto-déployée
+      # pour que cette image soit surveillée par WUD mais pas auto-déployée
       - "wud.watch=true"
       - "wud.trigger.exclude=docker.upgrade,slack.notif"
